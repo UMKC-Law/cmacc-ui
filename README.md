@@ -1,2 +1,2 @@
-# ccmac
+# cmacc-ui
 CommonAccord code
