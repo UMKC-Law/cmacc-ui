@@ -41,6 +41,9 @@
     <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+
+    <![endif]-->
+
 </head>
 <body>
 
@@ -56,159 +59,23 @@ $document .= file_get_contents($path . $dir, FILE_USE_INCLUDE_PATH);
 
 include("$lib_path/view-tabs-bootstrap.php");
 
-
-class Screen
-{
-    var $cmacc_fields = array();                                        // Fields from cmacc
-    var $cmacc_id = 0;                                                  // Index or row number;
-
-    var $fields = array();                                              // Fields defined by the user
-
-    function __construct()
-    {
-        $this->fields[] = array(
-            'name' => 'Ti',
-            'label' => 'Title',
-            'value' => 'Term of Confidentiality',
-            'place_holder' => 'Enter: Title to Document',
-            'type' => 'text',
-            'required' => '',
-            'cmacc_id' => 0
-        );
-        $this->fields[] = array(
-            'name' => 'SecName',
-            'label' => 'Section Name',
-            'value' => '',
-            'place_holder' => 'Enter: Section Title',
-            'type' => 'text',
-            'required' => '',
-            'cmacc_id' => 0
-        );
-
-    }
-
-    function add_cmacc_field($name, $value)
-    {
-
-        $name = trim($name);                                            //  Remove any extra white space
-
-        $this->cmacc_id++;
-        $this->cmacc_fields[$this->cmacc_id] = array(
-            'name' => $name,
-            'label' => $name,
-            'value' => $value
-        );
-
-        $field_offset = $this->get_field_offset($name);
-
-        if ($field_offset === FALSE) {
-            $field_offset = $this->add_field($name, $name, $value);
-        }
-
-        $this->fields[$field_offset]['cmacc_id'] = $this->cmacc_id;
-
-    }
-
-    function get_field_offset($name)
-    {
-
-        foreach ($this->fields AS $i => $v) {
-            if ($v['name'] == $name) return $i;
-        }
-
-        return false;
-    }
-
-    function add_field($name, $label = '', $value = '', $place_holder = '', $type = 'text', $required = '', $cmacc_id = 0)
-    {
-        $this->fields[] = array(
-            'name' => $name,
-            'label' => $label,
-            'value' => $value,
-            'place_holder' => $place_holder,
-            'type' => $type,
-            'required' => $required,
-            'cmacc_id' => $cmacc_id
-        );
-
-        return sizeof($this->fields) - 1;
-
-    }
-
-    function dump()
-    {
-        var_dump($this->fields);
-        var_dump($this->cmacc_fields);
-    }
-
-    function paint_fields()
-    {
-
-        $html = '';
-
-        foreach ($this->fields AS $i => $v) {
-
-            $name = $v['name'];
-            $value = $v['value'];
-            $label = $v['label'];
-            $place_holder = $v['place_holder'];
-            $type = $v['type'];
-            $required = $v['required'];
-
-            if (empty($name)) continue;
-
-            $f = <<<EOM
-                <div class="form-group">
-                    <label class="col-md-3 control-label" for="$name">$label</label>
-
-                    <div class="col-md-9">
-                        <input id="$name" name="$name" placeholder="$place_holder"
-                               class="form-control input-md" required="" type="text" value="$value">
-                    </div>
-                </div>
-EOM;
-
-
-            $html .= $f;
-
-        }
-
-        return $html;
-    }
-
-
-}
-
-$screen = new Screen();
-
 ?>
 
 <div class="container">
 
-    <div class="starter-template">
-        <h1><?php echo $dir; ?></h1>
-
-        <div id="tab-edit">
-            <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-                <textarea id="textedit" <?php echo TEXT_EDIT_WINDOW_SIZE; ?> name="newcontent"
-                          style="<?php echo TEXT_EDIT_AREA_STYLE; ?>">
-
-<?php echo $document; ?>
-
-
-
-                </textarea><br>
-                <input class="btn btn-info" type="submit" name="submit" value="Save">
-                <input type="hidden" name="file" value="<?php echo $dir; ?>">
-                <input type="hidden" name="action" value="source">
-            </form>
-
-
-        </div>
-    </div>
 
 
     <?php
+
+    include("$lib_path/QNA.php");
+    $QNA = new QNA("$path/$dir");
+    $QNA->process_form_file();
+
+    ?>
+
+    <?php
+    include("$lib_path/Fields.php");
+    $fields = new Fields();
     $lines = explode("\n", $document);
 
     foreach ($lines AS $line) {
@@ -220,7 +87,7 @@ $screen = new Screen();
         $field_value = $field[2];
 
 
-        $screen->add_cmacc_field($field_name, $field_value);
+        $fields->add_cmacc_field($field_name, $field_value);
 
 
     }
@@ -238,7 +105,7 @@ $screen = new Screen();
 
                 <hr>
 
-                <?php echo $screen->paint_fields(); ?>
+                <?php echo $fields->paint_fields(); ?>
 
                 <hr>
 
@@ -288,6 +155,28 @@ $screen = new Screen();
             </fieldset>
         </form>
     </div>
+
+    <div class="starter-template">
+        <h1><?php echo $dir; ?></h1>
+
+        <div id="tab-edit">
+            <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+                <textarea id="textedit" <?php echo TEXT_EDIT_WINDOW_SIZE; ?> name="newcontent"
+                          style="<?php echo TEXT_EDIT_AREA_STYLE; ?>">
+
+<?php echo $document; ?>
+
+
+
+                </textarea><br>
+                <input class="btn btn-info" type="submit" name="submit" value="Save">
+                <input type="hidden" name="file" value="<?php echo $dir; ?>">
+                <input type="hidden" name="action" value="source">
+            </form>
+
+
+        </div>
+    </div>
 </div>
 
 
@@ -298,3 +187,5 @@ $screen = new Screen();
 <script src="public/bootstrap/js/bootstrap.min.js"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="public/bootstrap/js/ie10-viewport-bug-workaround.js"></script>
+<script src="public/js/form.js"></script>
+
