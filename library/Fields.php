@@ -97,6 +97,8 @@ class Fields
 
         foreach ($this->fields AS $i => $v) {
 
+            if (empty($name)) continue;
+
             $name = $v['name'];
             $value = $v['value'];
             $label = $v['label'];
@@ -104,9 +106,24 @@ class Fields
             $type = $v['type'];
             $required = $v['required'];
 
-            if (empty($name)) continue;
+            $html .= $this->paint_field( $name, $value, $label, $place_holder, $type, $required);
 
-            $f = <<<EOM
+        }
+
+        return $html;
+    }
+
+    function paint_field( $name, $value = '', $label = '', $place_holder = '', $type = '', $required ='' )
+    {
+
+
+
+        $name = str_replace( ' ', '_', $name );         // Remove white space
+        $name = str_replace( '.', '_', $name );         // Remove white space
+
+        if ( empty( $label ) ) $label = $name;
+
+        $f = <<<EOM
                 <div class="form-group">
                     <label class="col-md-3 control-label" for="$name">$label</label>
 
@@ -118,11 +135,9 @@ class Fields
 EOM;
 
 
-            $html .= $f;
+        return $f;
 
-        }
 
-        return $html;
     }
 
 

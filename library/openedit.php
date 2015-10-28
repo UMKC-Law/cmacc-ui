@@ -65,15 +65,14 @@ include("$lib_path/view-tabs-bootstrap.php");
 
 
 
+    <div class="row">
+
+        <form class="form-horizontal">
+            <fieldset>
+                <legend>CMACC FORM</legend>
     <?php
 
-    include("$lib_path/QNA.php");
-    $QNA = new QNA("$path/$dir");
-    $QNA->process_form_file();
 
-    ?>
-
-    <?php
     include("$lib_path/Fields.php");
     $fields = new Fields();
     $lines = explode("\n", $document);
@@ -92,16 +91,17 @@ include("$lib_path/view-tabs-bootstrap.php");
 
     }
 
+
+    include("$lib_path/QNA.php");
+    $QNA = new QNA("$path/$dir");
+    $QNA->process_form_file( $fields );
+
     ?>
 
 
-    <div class="row">
-
-        <form class="form-horizontal">
-            <fieldset>
 
                 <!-- Form Name -->
-                <legend>CMACC FORM</legend>
+
 
                 <hr>
 

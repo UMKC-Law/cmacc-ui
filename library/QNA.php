@@ -36,7 +36,9 @@ class QNA {
         $this->fh = fopen($this->file_name, "r") or die("Unable to open file!");
     }
 
-    public function process_form_file() {
+    public function process_form_file( $Fields ) {
+
+        $this->Fields = $Fields;
 
         while ( $line = fgets($this->fh)) {
 
@@ -69,6 +71,13 @@ class QNA {
                                 $this->end_tab();
                             }
                             $this->start_tab($field_value);                                                 // Then start a tab
+
+
+                            break;
+
+                        case 'field':
+
+                            $this->start_field($field_value);
                             break;
 
                         default:
@@ -162,6 +171,13 @@ class QNA {
 
         $this->type_stack[$this->stack_i] = 'tab-group';
         //  $this->stack[$this->stack_i][] = '  TAB GROUP START';
+    }
+
+    function start_field($field) {
+
+
+        $this->stack[$this->stack_i][] = $this->Fields->paint_field( $field );
+
     }
 
     function end_tab_group() {
