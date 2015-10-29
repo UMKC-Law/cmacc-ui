@@ -65,12 +65,11 @@ include("$lib_path/view-tabs-bootstrap.php");
 
     <div class="row">
 
-        <h1><?php echo $dir; ?></h1>
-
         <form class="form-horizontal">
             <fieldset>
 
                 <?php
+
 
                 include("$lib_path/Fields.php");
                 $fields = new Fields();
@@ -84,28 +83,21 @@ include("$lib_path/view-tabs-bootstrap.php");
                     $field_name = $field[1];
                     $field_value = $field[2];
 
+
                     $fields->add_cmacc_field($field_name, $field_value);
+
 
                 }
 
+
                 include("$lib_path/QNA.php");
                 $QNA = new QNA("$path/$dir");
-                $QNA->process_form_file($fields);
-
-                echo $fields->paint_fields();
+                $QNA->process_form_file( $fields );
 
                 ?>
-
-            </fieldset>
-        </form>
-    </div>
-
-    <div class="starter-template" style="margin: 40px; padding: 40px;">
-        This is what the old Edit and Complete displayed
-        <pre>
-            <?php echo $document; ?>
-        </pre>
-
+                </fieldset>
+            </form>
+        </div>
     </div>
 </div>
 

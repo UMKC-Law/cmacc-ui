@@ -84,6 +84,26 @@ class Fields
 
     }
 
+    function update_field( $field_name, $var, $value ) {
+
+        if ( $i = $this->get_field_index_by_name( $field_name )) {
+            $this->fields[$i][$var] = $value;
+            return true;
+        }
+
+        return false;
+    }
+
+    function get_field_index_by_name( $field_name ) {
+        foreach ($this->fields AS $i => $v) {
+
+            if ( $v['name'] == $field_name ) {;
+                return $i;
+            }
+        }
+        return false;
+    }
+
     function dump()
     {
         var_dump($this->fields);

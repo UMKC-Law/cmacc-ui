@@ -23,6 +23,8 @@ class QNA {
     var $tab_group = 0;                                                             // indexs into $tab_stack and $tabs
     var $tab_number = 0;
 
+    var $in_field = false;
+
     public function __construct($full_file_name)
     {
 
@@ -42,7 +44,7 @@ class QNA {
 
         while ( $line = fgets($this->fh)) {
 
-            if ($s = preg_match("/\.([a-z]*)\s(.*)|(.*)/", $line, $field)) {
+            if ($s = preg_match("/\.([a-z_\-]*)\s(.*)|(.*)/", $line, $field)) {
 
                 if (!empty($field[1])) {
 
@@ -51,6 +53,7 @@ class QNA {
 
                     switch ( $field_name ) {
                         case 'page':
+
 
                             if ($this->stack_i != -1 ) {
                                 $this->end_page( );
@@ -64,6 +67,10 @@ class QNA {
 
                         case 'tab':
 
+                            if ( $this->in_field ) {
+                                $this->end_field();
+                            }
+
 
                             if  ($this->type_stack[$this->stack_i] != 'tab') {       // If we are not in a tab group create it
                                 $this->start_tab_group();
@@ -76,8 +83,19 @@ class QNA {
                             break;
 
                         case 'field':
-
                             $this->start_field($field_value);
+                            break;
+
+                        case 'field_label':
+                            $this->update_field( $this->in_field, 'label', $field_value );
+                            break;
+
+                        case 'field_description':
+                            $this->update_field( $this->in_field, 'description', $field_value );
+                            break;
+
+                        case 'field_place_holder':
+                            $this->update_field( $this->in_field, 'place_holder', $field_value );
                             break;
 
                         default:
@@ -96,6 +114,8 @@ class QNA {
 
         }
         if ($this->stack_i != -1 ) {                // Print the current page if there is one.
+
+
             $this->end_page( 1 );
 
         }
@@ -110,7 +130,7 @@ class QNA {
         $this->type_stack[$this->stack_i] = 'page';
 
 
-        $hidden = $this->page_number == 1 ? '' : ' style="display: none"; ';
+        $hidden = $this->page_number == 1 ? '' : ' style="display: none;" ';
 
         list( $page_id, $page_title) = $this->get_page_name_description($field);
 
@@ -126,30 +146,31 @@ class QNA {
     function end_page( $last_page = 0 )
     {
 
+        if ( $this->in_field ) {
+            $this->end_field();
+        }
+
         if ($this->type_stack[$this->stack_i] != 'page') {
             $this->end_tab_group();
         }
-
 
         foreach ($this->stack[$this->stack_i] AS $i => $line) {
             if ($i > 0) print "\t";
             print $line . "\n";
         }
 
-
-        print "<div>";
+        print "<div class=\"page-bottom-nav\">";
         if ($this->page_number != 1) {
             $prev_page = 'show_page="page_' . ($this->page_number - 1) . '"';
-            print '<a href="#" ' . $prev_page . ' class="btn btn-primary btn-lg page_button" role="button">Prev</a>';
+            print '<a href="#" ' . $prev_page . ' class="btn btn-default page_button" role="button">Prev</a>';
         } else {
             $prev_page = 'show_page="page_1"';
         }
 
         $next_page = 'show_page="page_' . ($this->page_number + 1) . '"';
 
-
         if ( $last_page == 0 ) {
-            print '<a href="#" ' . $next_page . ' class="btn btn-default btn-lg page_button" role="button">Next</a>';
+            print '<a href="#" ' . $next_page . ' class="btn btn-primary page_button" role="button">Next</a>';
         }
 
         print "</div>";
@@ -160,7 +181,6 @@ class QNA {
         unset($this->stack[$this->stack_i]);
         unset($this->type_stack[$this->stack_i]);
         $this->stack_i--;
-
 
     }
 
@@ -173,18 +193,12 @@ class QNA {
         //  $this->stack[$this->stack_i][] = '  TAB GROUP START';
     }
 
-    function start_field($field) {
-
-
-        $this->stack[$this->stack_i][] = $this->Fields->paint_field( $field );
-
-    }
-
     function end_tab_group() {
 
         $this->end_tab();
 
-        $this->stack[$this->stack_i -1][] = "\n<div>\n\t<ul class=\"nav nav-tabs\" role=\"tablist\">\n";
+        $this->stack[$this->stack_i -1][] = "\n<div class=\"start-of-tab-group\">";
+        $this->stack[$this->stack_i -1][] = "\t<ul class=\"nav nav-tabs\" role=\"tablist\">\n";
 
         foreach ( $this->tabs[$this->tab_group] AS $tab_i => $tab ) {
 
@@ -233,7 +247,6 @@ class QNA {
 
         $this->tabs[$this->tab_group][$this->tab_number] = array('id' => $tab_id, 'title' => $tab_title);
 
-
     }
 
     function end_tab() {
@@ -246,8 +259,45 @@ class QNA {
         unset($this->type_stack[$this->stack_i]);
         $this->stack_i--;
 
+    }
+
+    function start_field($field) {
+
+        if ( $this->in_field ) {
+            $this->end_field();
+        }
+
+        $this->Fields->add_field( $field );
+        $this->in_field = $field;
 
     }
+
+    function update_field( $field_id, $attribute, $attribute_value ) {
+        return $this->Fields->update_field( $field_id, $attribute, $attribute_value );
+    }
+
+    function end_field () {
+        $i = $this->Fields->get_field_index_by_name( $this->in_field );
+
+        if ( $i ) {
+            $v = $this->Fields->fields[$i];
+            $name = $v['name'];
+            $value = $v['value'];
+            $label = $v['label'];
+            $place_holder = $v['place_holder'];
+            $type = $v['type'];
+            $required = $v['required'];
+
+            $html = $this->Fields->paint_field( $name, $value, $label, $place_holder, $type, $required);
+
+            $this->stack[$this->stack_i][] = $html;
+
+        }
+
+        $this->in_field = false;
+    }
+
+
 
     function get_page_name_description($field) {
 
