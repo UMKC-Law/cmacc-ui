@@ -89,7 +89,7 @@ class QNA
 
                         case 'tab':
 
-                            if ($this->in_field) {
+                            if ( $this->in_field ) {
                                 $this->end_last_field();
                             }
 
@@ -171,7 +171,7 @@ class QNA
     function end_page($last_page = 0)
     {
 
-        if ($this->in_field) {
+        if ( $this->in_field ) {
             $this->end_last_field();
         }
 
@@ -194,7 +194,7 @@ class QNA
 
         $next_page = 'show_page="page_' . ($this->page_number + 1) . '"';
 
-        if ($last_page == 0) {
+        if ( $last_page == 0 ) {
             print '<a href="#" ' . $next_page . ' class="btn btn-primary page_button pull-right" role="button">Next</a>';
         }
 
@@ -323,8 +323,7 @@ class QNA
             $required = $v['required'];
             $description = $v['description'];
 
-            $html = $this->Fields->paint_field($name, $value, $label, $place_holder, $type, $required, $description);
-
+            $html = $this->Fields->paint_field( $name, $value, $label, $place_holder, $type, $required, $description);
 
             $this->stack[$this->stack_i][] = $html;
             $this->stack[$this->stack_i][] = "<row><div class=\"col-lg-12\"><br/>&nbsp;</div></row>\n";
@@ -334,12 +333,10 @@ class QNA
         $this->in_field = false;
     }
 
-    function end_last_field()
-    {
+    function end_last_field() {
         $this->end_field();
         $this->stack[$this->stack_i][] = "</div>\n";
     }
-
 
     function get_page_name_description($field)
     {
