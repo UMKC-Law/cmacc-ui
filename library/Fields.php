@@ -68,7 +68,7 @@ class Fields
         return false;
     }
 
-    function add_field($name, $label = '', $value = '', $place_holder = '', $type = 'text', $required = '', $cmacc_id = 0)
+    function add_field($name, $label = '', $value = '', $place_holder = '', $type = 'text', $required = '', $description= '', $cmacc_id = 0)
     {
         $this->fields[] = array(
             'name' => $name,
@@ -77,6 +77,7 @@ class Fields
             'place_holder' => $place_holder,
             'type' => $type,
             'required' => $required,
+            'description' => $description,
             'cmacc_id' => $cmacc_id
         );
 
@@ -125,15 +126,16 @@ class Fields
             $place_holder = $v['place_holder'];
             $type = $v['type'];
             $required = $v['required'];
+            $description = $v['description'];
 
-            $html .= $this->paint_field( $name, $value, $label, $place_holder, $type, $required);
+            $html .= $this->paint_field( $name, $value, $label, $place_holder, $type, $required, $description);
 
         }
 
         return $html;
     }
 
-    function paint_field( $name, $value = '', $label = '', $place_holder = '', $type = '', $required ='' )
+    function paint_field( $name, $value = '', $label = '', $place_holder = '', $type = '', $required ='', $description ='' )
     {
 
 
@@ -144,14 +146,22 @@ class Fields
         if ( empty( $label ) ) $label = $name;
 
         $f = <<<EOM
-                <div class="form-group">
-                    <label class="col-md-3 control-label" for="$name">$label</label>
+        <row class="cmacc-field-input">
+            <div class="col-lg-8">
+                    <div class="form-group">
+                        <label class="col-md-3 control-label" for="$name">$label</label>
 
-                    <div class="col-md-9">
-                        <input id="$name" name="$name" placeholder="$place_holder"
-                               class="form-control input-md" required="" type="text" value="$value">
+                        <div class="col-md-9">
+                            <input id="$name" name="$name" placeholder="$place_holder"
+                                   class="form-control input-md" required="" type="text" value="$value">
+                        </div>
                     </div>
-                </div>
+             </div>
+             <div class="col-lg-4">
+                $description
+             </div>
+
+        </row>
 EOM;
 
 

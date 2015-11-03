@@ -29,6 +29,21 @@
         .starter-template {
             padding: 40px 15px;
         }
+
+        .input-group {
+            background-image: none;
+            background-color: #fafafa;
+            padding-top: 2em;
+            margin-top: 2em;
+            padding-left: 30px;
+            padding-right: 5px;
+        }
+
+        .cmacc-field-input {
+            margin-top: 2em;
+            padding-top: 2em;
+        }
+
     </style>
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
@@ -62,21 +77,20 @@ include("$lib_path/view-tabs-bootstrap.php");
 include("$lib_path/QNA.php");
 $QNA = new QNA("$path/$dir");
 
-    if ( $QNA->dot_file_exists() ) {
+?>
 
 
-    ?>
+<div class="container">
 
-    <div class="container">
+    <div class="row">
 
-        <div class="row">
-
-            <h1><?php echo $dir; ?></h1>
+        <?php if ($QNA->dot_file_exists()) { ?>
 
             <form class="form-horizontal">
                 <fieldset>
 
                     <?php
+
 
                     include("$lib_path/Fields.php");
                     $fields = new Fields();
@@ -90,52 +104,43 @@ $QNA = new QNA("$path/$dir");
                         $field_name = $field[1];
                         $field_value = $field[2];
 
+
                         $fields->add_cmacc_field($field_name, $field_value);
+
 
                     }
 
 
                     $QNA->process_form_file($fields);
 
-                    echo $fields->paint_fields();
-
                     ?>
-
                 </fieldset>
             </form>
-        </div>
+        <?php } else { ?>
+            <div class="starter-template">
+                <h1><?php echo $dir; ?></h1>
 
-        <div class="starter-template" style="margin: 40px; padding: 40px;">
-            This is what the old Edit and Complete displayed
-        <pre>
-            <?php echo $document; ?>
-        </pre>
-
-        </div>
-    </div>
-
-<?php } else { ?>
-    <div class="starter-template">
-        <h1><?php echo $dir; ?></h1>
-
-        <div id="tab-edit">
-            <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+                <div id="tab-edit">
+                    <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
                 <textarea id="textedit" <?php echo TEXT_EDIT_WINDOW_SIZE; ?> name="newcontent"
                           style="<?php echo TEXT_EDIT_AREA_STYLE; ?>">
 
 <?php echo $document; ?>
 
+
+
                 </textarea><br>
-                <input class="btn btn-info" type="submit" name="submit" value="Save">
-                <input type="hidden" name="file" value="<?php echo $dir; ?>">
-                <input type="hidden" name="action" value="source">
-            </form>
+                        <input class="btn btn-info" type="submit" name="submit" value="Save">
+                        <input type="hidden" name="file" value="<?php echo $dir; ?>">
+                        <input type="hidden" name="action" value="source">
+                    </form>
 
 
-        </div>
+                </div>
+            </div>
+        <?php } ?>
     </div>
-
-<?php } ?>
+</div>
 
 
 <!-- Bootstrap core JavaScript
