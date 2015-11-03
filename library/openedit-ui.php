@@ -29,6 +29,21 @@
         .starter-template {
             padding: 40px 15px;
         }
+
+        .input-group {
+            background-image: none;
+            background-color: #fafafa;
+            padding-top: 2em;
+            margin-top: 2em;
+            padding-left: 30px;
+            padding-right: 5px;
+        }
+
+        .cmacc-field-input {
+            margin-top: 2em;
+            padding-top: 2em;
+        }
+
     </style>
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->

@@ -86,7 +86,7 @@ class QNA {
                         case 'tab':
 
                             if ( $this->in_field ) {
-                                $this->end_field();
+                                $this->end_last_field();
                             }
 
 
@@ -165,7 +165,7 @@ class QNA {
     {
 
         if ( $this->in_field ) {
-            $this->end_field();
+            $this->end_last_field();
         }
 
         if ($this->type_stack[$this->stack_i] != 'page') {
@@ -180,7 +180,7 @@ class QNA {
         print "<div class=\"page-bottom-nav\">";
         if ($this->page_number != 1) {
             $prev_page = 'show_page="page_' . ($this->page_number - 1) . '"';
-            print '<a href="#" ' . $prev_page . ' class="btn btn-default page_button" role="button">Prev</a>';
+            print '<a href="#" ' . $prev_page . ' class="btn btn-default page_button pull-left" role="button">Prev</a>';
         } else {
             $prev_page = 'show_page="page_1"';
         }
@@ -188,7 +188,7 @@ class QNA {
         $next_page = 'show_page="page_' . ($this->page_number + 1) . '"';
 
         if ( $last_page == 0 ) {
-            print '<a href="#" ' . $next_page . ' class="btn btn-primary page_button" role="button">Next</a>';
+            print '<a href="#" ' . $next_page . ' class="btn btn-primary page_button pull-right" role="button">Next</a>';
         }
 
         print "</div>";
@@ -283,6 +283,8 @@ class QNA {
 
         if ( $this->in_field ) {
             $this->end_field();
+        } else {
+            $this->stack[$this->stack_i][] = "<div class=\"input-group well\">\n";
         }
 
         $this->Fields->add_field( $field );
@@ -305,14 +307,22 @@ class QNA {
             $place_holder = $v['place_holder'];
             $type = $v['type'];
             $required = $v['required'];
+            $description = $v['description'];
 
-            $html = $this->Fields->paint_field( $name, $value, $label, $place_holder, $type, $required);
+            $html = $this->Fields->paint_field( $name, $value, $label, $place_holder, $type, $required, $description);
+
 
             $this->stack[$this->stack_i][] = $html;
+            $this->stack[$this->stack_i][] = "<row><div class=\"col-lg-12\"><br/>&nbsp;</div></row>\n";
 
         }
 
         $this->in_field = false;
+    }
+
+    function end_last_field() {
+        $this->end_field();
+        $this->stack[$this->stack_i][] = "</div>\n";
     }
 
 
