@@ -59,55 +59,83 @@ $document .= file_get_contents($path . $dir, FILE_USE_INCLUDE_PATH);
 
 include("$lib_path/view-tabs-bootstrap.php");
 
-?>
+include("$lib_path/QNA.php");
+$QNA = new QNA("$path/$dir");
 
-<div class="container">
+    if ( $QNA->dot_file_exists() ) {
 
-    <div class="row">
 
-        <h1><?php echo $dir; ?></h1>
+    ?>
 
-        <form class="form-horizontal">
-            <fieldset>
+    <div class="container">
 
-                <?php
+        <div class="row">
 
-                include("$lib_path/Fields.php");
-                $fields = new Fields();
-                $lines = explode("\n", $document);
+            <h1><?php echo $dir; ?></h1>
 
-                foreach ($lines AS $line) {
-                    preg_match("/(.*)=(.*)/", $line, $field);
+            <form class="form-horizontal">
+                <fieldset>
 
-                    if (sizeof($field) == 0) continue;             // skip blank lines
+                    <?php
 
-                    $field_name = $field[1];
-                    $field_value = $field[2];
+                    include("$lib_path/Fields.php");
+                    $fields = new Fields();
+                    $lines = explode("\n", $document);
 
-                    $fields->add_cmacc_field($field_name, $field_value);
+                    foreach ($lines AS $line) {
+                        preg_match("/(.*)=(.*)/", $line, $field);
 
-                }
+                        if (sizeof($field) == 0) continue;             // skip blank lines
 
-                include("$lib_path/QNA.php");
-                $QNA = new QNA("$path/$dir");
-                $QNA->process_form_file($fields);
+                        $field_name = $field[1];
+                        $field_value = $field[2];
 
-                echo $fields->paint_fields();
+                        $fields->add_cmacc_field($field_name, $field_value);
 
-                ?>
+                    }
 
-            </fieldset>
-        </form>
-    </div>
 
-    <div class="starter-template" style="margin: 40px; padding: 40px;">
-        This is what the old Edit and Complete displayed
+                    $QNA->process_form_file($fields);
+
+                    echo $fields->paint_fields();
+
+                    ?>
+
+                </fieldset>
+            </form>
+        </div>
+
+        <div class="starter-template" style="margin: 40px; padding: 40px;">
+            This is what the old Edit and Complete displayed
         <pre>
             <?php echo $document; ?>
         </pre>
 
+        </div>
     </div>
-</div>
+
+<?php } else { ?>
+    <div class="starter-template">
+        <h1><?php echo $dir; ?></h1>
+
+        <div id="tab-edit">
+            <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+                <textarea id="textedit" <?php echo TEXT_EDIT_WINDOW_SIZE; ?> name="newcontent"
+                          style="<?php echo TEXT_EDIT_AREA_STYLE; ?>">
+
+<?php echo $document; ?>
+
+                </textarea><br>
+                <input class="btn btn-info" type="submit" name="submit" value="Save">
+                <input type="hidden" name="file" value="<?php echo $dir; ?>">
+                <input type="hidden" name="action" value="source">
+            </form>
+
+
+        </div>
+    </div>
+
+<?php } ?>
 
 
 <!-- Bootstrap core JavaScript

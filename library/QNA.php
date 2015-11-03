@@ -9,6 +9,8 @@
 class QNA {
     var $file_name = 'test.dot';
 
+    var $fh = false;
+
     var $stack = array();
 
     var $stack_i = -1;
@@ -35,8 +37,24 @@ class QNA {
 
         $this->file_name = "$dir/$file_name.dot";
 
-        $this->fh = fopen($this->file_name, "r") or die("Unable to open file!");
+        if ( file_exists( $this->file_name) ) {
+            return $this->fh = fopen($this->file_name, "r");
+        } else {
+            return false;
+        }
+
+
     }
+
+    public  function dot_file_exists() {
+
+        if ( is_object( $this->fh ) ) {
+            return true;
+        } else {
+            return false;
+        }
+
+}
 
     public function process_form_file( $Fields ) {
 
