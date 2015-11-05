@@ -51,7 +51,12 @@ After installing
     .field_label Address
     .field_description Mailing address of the department
     ````
-    
+ 3. Now when you goto /index.php?action=openedit&file=/H4KC/Form/test.md
+    you should see
+
+![form](https://github.com/UMKC-Law/cmacc-ui/blob/master/assets/cmacc-ui-example.jpg)
+
+
 
 Installing
 ==========
