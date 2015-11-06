@@ -85,9 +85,22 @@ To create a development site:
             }
         ],
         "require": {
-            "CommonAccord/cmacc-ui": "dev-master"
-        }
+            "CommonAccord/cmacc-ui": "dev-master",
+            "components/jquery": "^2.1",
+            "twbs/bootstrap": "^3.3"
+        },
+        "scripts": {
+            "post-update-cmd": [
+                "mkdir -p public/bootstrap",
+                "mkdir -p public/jquery",
+                "mkdir -p public/js",
+                "cp -R vendor/twbs/bootstrap/dist/ public/bootstrap/",
+                "cp -R vendor/twbs/bootstrap/docs/assets/ public/bootstrap/",
+                "cp -R vendor/components/jquery/ public/jquery/",
+                "cp -R vendor/CommonAccord/cmacc-ui/js/ public/js/"
+            ]}
     }
+~       
     ````
     
 5. Remove the current `vendor` folder
