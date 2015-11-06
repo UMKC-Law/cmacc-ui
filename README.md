@@ -108,7 +108,7 @@ To create a development site:
 6. Regenerate the `vendor` folder by running Composer
     
     ````
-    composer install
+    composer update
     ````
 
     you should see the following lines
