@@ -153,7 +153,7 @@ class Fields
 
                         <div class="col-md-9">
                             <input id="$name" name="$name" placeholder="$place_holder"
-                                   class="form-control input-md" required="" type="text" value="$value">
+                                   class="form-control input-md" type="text" value="$value">
                         </div>
                     </div>
              </div>
