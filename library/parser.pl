@@ -70,27 +70,28 @@ sub expand_fields  {
 
 	my($f,$field,$part) = @_;
 
-	foreach( $$field =~ /\{([^}]+)\}/g ) {
-		my $ex = $_;
-		my $ox = $part ? $part . $ex : $ex;
-		my $value = parse($orig, $ox);
-		$$field =~ s/\{\Q$ex\E\}/$value/gg if $value;
-	}
-} 
 
+
+foreach( $$field =~ /\{([^}]+)\}/g ) {
+       my $ex = $_;
+       my $ox = $part ? $part . $ex : $ex;
+
+     if ( substr($ox,-2) eq "!!") {
+      $ox = substr($ox,0,-2);
+      my $value = parse($orig, $ox);      
+     $$field =~ s/\{\Q$ex\E\}/$value/gg if $value;
+
+      } else {
+       my $value = parse($orig, $ox);      
+       my $spanvalue = "<span title=\"" . $ox . "\" >". $value . "</span>";
+       $$field =~ s/\{\Q$ex\E\}/$spanvalue/gg if $value;
+   }
+     }
+      }
 
 
 my $output  = parse($ARGV[0], "Model.Root");
 print $output;
-
-# XXX FIX ME XXX This is horrible - but  I'm just dead tired  :(
-print "<br><br><hr><br><br>";
-print "<div id='missing'><p><h3 class='subtitle2'>Missing parameters:</h3>";
-my %seen; my @arr = $output=~/\{([^}]+)\}/g;
-@arr = grep { ! $seen{$_}++ } @arr;
-print "$_=<br>" foreach @arr;
-print "</p></div>";
-
 
 #clean up the temporary files (remote fetching)
 `rm $_` for values %remote;

@@ -2,7 +2,13 @@
 error_reporting(E_ALL);
 $path = ROOT . '/Doc/';
 
-$GitHubRepo = "commonaccord/Site-Org";
+//$URLForDocsInRepo = URLFORDOCSINREPO ;
+
+//$Render_the_Document= "Render the Document";
+
+//$Completions_Message = "Open Completions - copy from here, paste into your document, and complete:";
+
+$Text_Edit_Window_Size = TEXTEDITWINDOWSIZE ;
 
 if (!isset($_REQUEST['action'])) {
     $_REQUEST['action'] = "landing";
@@ -73,11 +79,6 @@ switch ($_REQUEST['action']) {
     case 'edit':
 
         include('edit.php');
-        break;
-
-    case 'pull':
-
-        echo `cd /var/www/www.commonaccord.org/Alpha; git reset --hard HEAD; git pull -f 2>&1`;
         break;
 
     default:
