@@ -81,6 +81,43 @@ switch ($_REQUEST['action']) {
         include('edit.php');
         break;
 
+    case 'edit-form':
+
+        include('edit-form.php');
+        break;
+
+    case 'save-form':
+
+        $file_name_info = pathinfo($path . $dir);
+
+        $file_dir = $file_name_info['dirname'];
+        $file_name = $file_name_info['filename'];
+
+        $file_name_to_edit = "$file_dir/$file_name.dot";
+
+        if (file_exists($file_name_to_edit)) {
+
+
+                if (is_writeable($file_name_to_edit)) {
+                    $fp = fopen($file_name_to_edit, "w");
+                    $data = $_REQUEST['newcontent'];
+                    $data = preg_replace('/\r\n/', "\n", $data);
+                    $data = trim($data);
+                    fwrite($fp, $data);
+                    fclose($fp);
+                } else {
+                    print '<span style="color: red">ERROR: File ' . "$file_name_to_edit" . ' is not write able.</style>';
+                }
+
+        } else {
+
+            $contents = "NOTHING TO EDIT";
+        }
+
+        include('save-form.php');
+        include('openedit.php');
+        break;
+
     case 'openedit':
 
         include('openedit.php');

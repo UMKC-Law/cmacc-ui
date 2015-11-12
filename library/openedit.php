@@ -72,7 +72,7 @@ $document .= "\nWAS=" . date("Y/m/d") . " : " . time() . "\n\n";
 $document .= file_get_contents($path . $dir, FILE_USE_INCLUDE_PATH);
 
 
-include("$lib_path/view-tabs-bootstrap.php");
+include("$lib_path/view-tabs.php");
 
 include("$lib_path/QNA.php");
 $QNA = new QNA("$path/$dir");
