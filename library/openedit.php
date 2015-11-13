@@ -86,7 +86,7 @@ $QNA = new QNA("$path/$dir");
 
         <?php if ($QNA->dot_file_exists()) { ?>
 
-            <form class="form-horizontal">
+            <form class="form-horizontal" method="post">
                 <fieldset>
 
                     <?php
@@ -117,7 +117,7 @@ $QNA = new QNA("$path/$dir");
                 </fieldset>
                 <input class="btn btn-info" type="submit" name="submit" value="Save">
                 <input type="hidden" name="file" value="<?php echo $dir; ?>">
-                <input type="hidden" name="action" value="form-save">
+                <input type="hidden" name="action" value="openedit-save">
             </form>
         <?php } else { ?>
             <div class="starter-template">

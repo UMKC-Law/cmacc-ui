@@ -41,9 +41,13 @@ class Fields
 
         $name = trim($name);                                            //  Remove any extra white space
 
+        $html_name = str_replace( ' ', '_', $name );         // Remove white space
+        $html_name = str_replace( '.', '_', $html_name );         // Remove white space
+
         $this->cmacc_id++;
         $this->cmacc_fields[$this->cmacc_id] = array(
             'name' => $name,
+            'html_name' => $html_name,
             'label' => $name,
             'value' => $value
         );
@@ -70,8 +74,13 @@ class Fields
 
     function add_field($name, $label = '', $value = '', $place_holder = '', $type = 'text', $required = '', $description= '', $cmacc_id = 0)
     {
+
+        $html_name = str_replace( ' ', '_', $name );         // Remove white space
+        $html_name = str_replace( '.', '_', $html_name );         // Remove white space
+
         $this->fields[] = array(
             'name' => $name,
+            'html_name' => $html_name,
             'label' => $label,
             'value' => $value,
             'place_holder' => $place_holder,
@@ -121,6 +130,8 @@ class Fields
             if (empty($name)) continue;
 
             $name = $v['name'];
+            $html_name = $v['html_name'];
+
             $value = $v['value'];
             $label = $v['label'];
             $place_holder = $v['place_holder'];
@@ -128,31 +139,30 @@ class Fields
             $required = $v['required'];
             $description = $v['description'];
 
-            $html .= $this->paint_field( $name, $value, $label, $place_holder, $type, $required, $description);
+            $html .= $this->paint_field( $name, $html_name, $value, $label, $place_holder, $type, $required, $description);
 
         }
 
         return $html;
     }
 
-    function paint_field( $name, $value = '', $label = '', $place_holder = '', $type = '', $required ='', $description ='' )
+    function paint_field( $name, $html_name = '', $value = '', $label = '', $place_holder = '', $type = '', $required ='', $description ='' )
     {
 
 
 
-        $name = str_replace( ' ', '_', $name );         // Remove white space
-        $name = str_replace( '.', '_', $name );         // Remove white space
 
+        if ( empty( $html_name ) ) $html_name = $name;
         if ( empty( $label ) ) $label = $name;
 
         $f = <<<EOM
         <row class="cmacc-field-input">
             <div class="col-lg-8">
                     <div class="form-group">
-                        <label class="col-md-3 control-label" for="$name">$label</label>
+                        <label class="col-md-3 control-label" for="$html_name">$label</label>
 
                         <div class="col-md-9">
-                            <input id="$name" name="$name" placeholder="$place_holder"
+                            <input id="$html_name" name="$html_name" placeholder="$place_holder"
                                    class="form-control input-md" type="text" value="$value">
                         </div>
                     </div>

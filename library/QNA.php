@@ -316,6 +316,7 @@ class QNA
         if ($i) {
             $v = $this->Fields->fields[$i];
             $name = $v['name'];
+            $html_name = $v['html_name'];
             $value = $v['value'];
             $label = $v['label'];
             $place_holder = $v['place_holder'];
@@ -323,7 +324,7 @@ class QNA
             $required = $v['required'];
             $description = $v['description'];
 
-            $html = $this->Fields->paint_field( $name, $value, $label, $place_holder, $type, $required, $description);
+            $html = $this->Fields->paint_field( $name, $html_name, $value, $label, $place_holder, $type, $required, $description);
 
             $this->stack[$this->stack_i][] = $html;
             $this->stack[$this->stack_i][] = "<row><div class=\"col-lg-12\"><br/>&nbsp;</div></row>\n";
