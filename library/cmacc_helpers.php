@@ -123,7 +123,9 @@ switch ($_REQUEST['action']) {
         include('openedit.php');
         break;
 
-    case 'form-save':
+    case 'openedit-save':
+
+
 
         if (isset($_REQUEST['submit'])) {
 
@@ -132,12 +134,77 @@ switch ($_REQUEST['action']) {
             if (file_exists($file_name)) {
 
                 if (is_writeable($file_name)) {
+
+                    $includes = array();
+
+                    /**
+                     * Open file
+                     */
+
+                    $lib_path = LIB_PATH;
+                    $document = `perl $lib_path/openedit-parser.pl $path/$dir`;
+                    $document .= "\nWAS=" . date("Y/m/d") . " : " . time() . "\n\n";
+                    $document .= file_get_contents($path . $dir, FILE_USE_INCLUDE_PATH);
+
+                    /**
+                     * Load needed objects to process form
+                     */
+                    include("$lib_path/QNA.php");
+                    $QNA = new QNA("$path/$dir");
+
+                    include("$lib_path/Fields.php");
+                    $fields = new Fields();
+
+                    $QNA->process_form_file($fields);
+
+
+
+                    /**
+                     * Load fields from the input file
+                     */
+/*
+                    $lines = explode("\n", $document);
+
+                    foreach ($lines AS $line) {
+                        preg_match("/(.*)=(.*)/", $line, $field);
+
+                        if (sizeof($field) == 0) {
+                            continue;                                   // skip blank lines
+                        }  else {
+
+                            $field_name = $field[1];
+                            $field_value = $field[2];
+
+                            $fields->add_cmacc_field($field_name, $field_value);
+                        }
+
+
+                    }
+*/
+                    $includes[] = '=[H4KC/Form/Master_DSA.md]';
+print "<pre>";
+$fields->dump();
+                    /**
+                     * Process post variables
+                     */
+
+                    foreach ($_POST AS $fld => $val ) {
+                        $fields->update_field_by_html_name($fld,'value',$val);
+                    }
+print "--------------------------------------------------\n";
+$fields->dump();
+
+
                     $fp = fopen($file_name, "w");
+
+
+                    die;
+
  //                   $data = $_REQUEST['newcontent'];
  //                   $data = preg_replace('/\r\n/', "\n", $data);
  //                   $data = trim($data);
  //                   fwrite($fp, $data);
-                    fclose($fp);
+      //              fclose($fp);
                 } else {
                     print '<span style="color: red">ERROR: File ' . $dir . ' is not write able.</style>';
                 }

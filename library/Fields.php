@@ -15,24 +15,7 @@ class Fields
 
     function __construct()
     {
-        $this->fields[] = array(
-            'name' => 'Ti',
-            'label' => 'Title',
-            'value' => 'Term of Confidentiality',
-            'place_holder' => 'Enter: Title to Document',
-            'type' => 'text',
-            'required' => '',
-            'cmacc_id' => 0
-        );
-        $this->fields[] = array(
-            'name' => 'SecName',
-            'label' => 'Section Name',
-            'value' => '',
-            'place_holder' => 'Enter: Section Title',
-            'type' => 'text',
-            'required' => '',
-            'cmacc_id' => 0
-        );
+        $this->fields=array();
 
     }
 
@@ -104,10 +87,31 @@ class Fields
         return false;
     }
 
+    function update_field_by_html_name( $field_name, $var, $value ) {
+
+        if ( ($i = $this->get_field_index_by_html_name( $field_name )) !== false) {
+            $this->fields[$i][$var] = $value;
+            return true;
+        }
+
+        return false;
+    }
+
     function get_field_index_by_name( $field_name ) {
         foreach ($this->fields AS $i => $v) {
 
             if ( $v['name'] == $field_name ) {;
+                return $i;
+            }
+        }
+        return false;
+    }
+
+    function get_field_index_by_html_name( $field_name ) {
+
+        foreach ($this->fields AS $i => $v) {
+
+            if ( $v['html_name'] == $field_name ) {
                 return $i;
             }
         }
@@ -148,9 +152,6 @@ class Fields
 
     function paint_field( $name, $html_name = '', $value = '', $label = '', $place_holder = '', $type = '', $required ='', $description ='' )
     {
-
-
-
 
         if ( empty( $html_name ) ) $html_name = $name;
         if ( empty( $label ) ) $label = $name;
