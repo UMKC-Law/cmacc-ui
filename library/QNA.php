@@ -300,7 +300,7 @@ class QNA
         if ($this->in_field) {
             $this->end_field();
         } else {
-            $this->stack[$this->stack_i][] = "<div class=\"input-group well\">\n";
+            $this->stack[$this->stack_i][] = "<div class=\"input-group well col-lg-12\">\n";
         }
 
         $this->Fields->add_field($field);
