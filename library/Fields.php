@@ -124,6 +124,28 @@ class Fields
         var_dump($this->cmacc_fields);
     }
 
+    function format_fields_for_cmacc()
+    {
+
+        $html = "\n";
+
+        foreach ($this->fields AS $i => $v) {
+
+
+
+            $name = $v['name'];
+
+            if (empty($name)) continue;
+
+            $value = $v['value'];
+
+            $html .= "$name=$value\n\n";
+
+        }
+
+        return $html;
+    }
+
     function paint_fields()
     {
 
