@@ -1,11 +1,11 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: paulb
  * Date: 10/27/15
  * Time: 5:22 PM
  */
-
 class Fields
 {
     var $cmacc_fields = array();                                        // Fields from cmacc
@@ -15,7 +15,7 @@ class Fields
 
     function __construct()
     {
-        $this->fields=array();
+        $this->fields = array();
 
     }
 
@@ -24,8 +24,8 @@ class Fields
 
         $name = trim($name);                                            //  Remove any extra white space
 
-        $html_name = str_replace( ' ', '_', $name );         // Remove white space
-        $html_name = str_replace( '.', '_', $html_name );         // Remove white space
+        $html_name = str_replace(' ', '_', $name);         // Remove white space
+        $html_name = str_replace('.', '_', $html_name);         // Remove white space
 
         $this->cmacc_id++;
         $this->cmacc_fields[$this->cmacc_id] = array(
@@ -55,11 +55,11 @@ class Fields
         return false;
     }
 
-    function add_field($name, $label = '', $value = '', $place_holder = '', $type = 'text', $required = '', $description= '', $cmacc_id = 0)
+    function add_field($name, $label = '', $value = '', $place_holder = '', $type = 'text', $required = '', $description = '', $cmacc_id = 0)
     {
 
-        $html_name = str_replace( ' ', '_', $name );         // Remove white space
-        $html_name = str_replace( '.', '_', $html_name );         // Remove white space
+        $html_name = str_replace(' ', '_', $name);         // Remove white space
+        $html_name = str_replace('.', '_', $html_name);         // Remove white space
 
         $this->fields[] = array(
             'name' => $name,
@@ -77,9 +77,10 @@ class Fields
 
     }
 
-    function update_field( $field_name, $var, $value ) {
+    function update_field($field_name, $var, $value)
+    {
 
-        if ( $i = $this->get_field_index_by_name( $field_name )) {
+        if ($i = $this->get_field_index_by_name($field_name)) {
             $this->fields[$i][$var] = $value;
             return true;
         }
@@ -87,9 +88,10 @@ class Fields
         return false;
     }
 
-    function update_field_by_html_name( $field_name, $var, $value ) {
+    function update_field_by_html_name($field_name, $var, $value)
+    {
 
-        if ( ($i = $this->get_field_index_by_html_name( $field_name )) !== false) {
+        if (($i = $this->get_field_index_by_html_name($field_name)) !== false) {
             $this->fields[$i][$var] = $value;
             return true;
         }
@@ -97,21 +99,24 @@ class Fields
         return false;
     }
 
-    function get_field_index_by_name( $field_name ) {
+    function get_field_index_by_name($field_name)
+    {
         foreach ($this->fields AS $i => $v) {
 
-            if ( $v['name'] == $field_name ) {;
+            if ($v['name'] == $field_name) {
+                ;
                 return $i;
             }
         }
         return false;
     }
 
-    function get_field_index_by_html_name( $field_name ) {
+    function get_field_index_by_html_name($field_name)
+    {
 
         foreach ($this->fields AS $i => $v) {
 
-            if ( $v['html_name'] == $field_name ) {
+            if ($v['html_name'] == $field_name) {
                 return $i;
             }
         }
@@ -130,7 +135,6 @@ class Fields
         $html = "\n";
 
         foreach ($this->fields AS $i => $v) {
-
 
 
             $name = $v['name'];
@@ -165,20 +169,20 @@ class Fields
             $required = $v['required'];
             $description = $v['description'];
 
-            $html .= $this->paint_field( $name, $html_name, $value, $label, $place_holder, $type, $required, $description);
+            $html .= $this->paint_field($name, $html_name, $value, $label, $place_holder, $type, $required, $description);
 
         }
 
         return $html;
     }
 
-    function paint_field( $name, $html_name = '', $value = '', $label = '', $place_holder = '', $type = '', $required ='', $description ='' )
+    function paint_field($name, $html_name = '', $value = '', $label = '', $place_holder = '', $type = '', $required = '', $description = '')
     {
 
-        if ( empty( $html_name ) ) $html_name = $name;
-        if ( empty( $label ) ) $label = $name;
+        if (empty($html_name)) $html_name = $name;
+        if (empty($label)) $label = $name;
 
-        switch ( $type ){
+        switch ($type) {
             case "textarea":
 
 
@@ -227,7 +231,7 @@ EOM;
                 </row>
 EOM;
 
-    }
+        }
 
         return $f;
 
