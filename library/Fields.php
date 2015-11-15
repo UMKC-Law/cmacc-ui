@@ -178,25 +178,56 @@ class Fields
         if ( empty( $html_name ) ) $html_name = $name;
         if ( empty( $label ) ) $label = $name;
 
-        $f = <<<EOM
-        <row class="cmacc-field-input">
-            <div class="col-lg-8">
-                    <div class="form-group">
-                        <label class="col-md-3 control-label" for="$html_name">$label</label>
+        switch ( $type ){
+            case "textarea":
 
-                        <div class="col-md-9">
-                            <input id="$html_name" name="$html_name" placeholder="$place_holder"
-                                   class="form-control input-md" type="text" value="$value">
-                        </div>
-                    </div>
-             </div>
-             <div class="col-lg-4">
-                $description
-             </div>
 
-        </row>
+                $f = <<<EOM
+                <row class="cmacc-field-input">
+                    <div class="col-lg-8">
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="$html_name">$label</label>
+
+                                <div class="col-md-9">
+                                    <textarea id="$html_name" name="$html_name"
+                                           class="form-control col-md-9"
+                                            style="400px"
+                                           rows="20">$value</textarea>
+                                </div>
+                            </div>
+                     </div>
+                     <div class="col-lg-4">
+                        $description
+                     </div>
+
+                </row>
 EOM;
 
+                break;
+
+            case "text":
+            default:
+
+                $f = <<<EOM
+                <row class="cmacc-field-input">
+                    <div class="col-lg-8">
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="$html_name">$label</label>
+
+                                <div class="col-md-9">
+                                    <input id="$html_name" name="$html_name" placeholder="$place_holder"
+                                           class="form-control input-md" type="text" value="$value">
+                                </div>
+                            </div>
+                     </div>
+                     <div class="col-lg-4">
+                        $description
+                     </div>
+
+                </row>
+EOM;
+
+    }
 
         return $f;
 

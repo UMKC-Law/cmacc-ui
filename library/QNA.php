@@ -120,6 +120,10 @@ class QNA
                             $this->update_field($this->in_field, 'place_holder', $field_value);
                             break;
 
+                        case 'field_type':
+                            $this->update_field($this->in_field, 'type', $field_value);
+                            break;
+
                         default:
                             print_r($field);
                             break;

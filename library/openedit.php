@@ -24,6 +24,7 @@
     <style>
         body {
             padding-top: 50px;
+            color: #212121;
         }
 
         .starter-template {
@@ -42,6 +43,23 @@
         .cmacc-field-input {
             margin-top: 2em;
             padding-top: 2em;
+        }
+
+        p.header {
+            font-size: 20px;
+            line-height: 32px;
+            display: block;
+            -webkit-margin-before: 1em;
+            -webkit-margin-after: 1em;
+            -webkit-margin-start: 0px;
+            -webkit-margin-end: 0px;
+        }
+
+        h1.header {
+            font-size: 34px;
+            font-weight: 400;
+            line-height: 40px;
+            margin-bottom: 30px;
         }
 
     </style>
