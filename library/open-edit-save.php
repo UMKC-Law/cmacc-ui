@@ -52,10 +52,16 @@ class OpenEditSave
                                 $include_line = $include_file_name[0];
                                 $fields->add_ca_include_file($include_line);
                             }
+                        } else {
+
+                            $field_name = $field[1];
+                            $field_value = $field[2];
+
+                            $fields->add_cmacc_field($field_name, $field_value);
                         }
                     }
 
-                    $QNA->process_form_file($fields);
+                    $QNA->read_fields_from_form_file($fields);
 
                     /**
                      * Process post variables

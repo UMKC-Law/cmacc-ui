@@ -64,6 +64,21 @@ class QNA
     public function process_form_file($Fields)
     {
 
+        $this->read_fields_from_form_file($Fields);
+
+        if ($this->stack_i != -1) {                // Print the current page if there is one.
+            $this->end_page(1);
+        }
+
+        print $this->output_html;
+
+        print "</div>";                             // This is a sign of a bug....
+
+    }
+
+    function read_fields_from_form_file($Fields)
+    {
+
         $this->Fields = $Fields;
 
         while ($line = fgets($this->fh)) {
@@ -145,17 +160,6 @@ class QNA
             }
 
         }
-
-        if ($this->stack_i != -1) {                // Print the current page if there is one.
-
-
-            $this->end_page(1);
-
-        }
-
-        print $this->output_html;
-
-        print "</div>";                             // This is a sign of a bug....
 
     }
 
