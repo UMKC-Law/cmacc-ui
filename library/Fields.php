@@ -55,7 +55,7 @@ class Fields
         return false;
     }
 
-    function add_field($name, $label = '', $value = '', $place_holder = '', $type = 'text', $required = '', $description = '', $cmacc_id = 0)
+    function add_field($name, $label = '', $value = '', $place_holder = '', $options = array(), $type = 'text', $required = '', $description = '', $cmacc_id = 0)
     {
 
         $html_name = str_replace(' ', '_', $name);         // Remove white space
@@ -67,6 +67,7 @@ class Fields
             'label' => $label,
             'value' => $value,
             'place_holder' => $place_holder,
+            'options' => $options,
             'type' => $type,
             'required' => $required,
             'description' => $description,
@@ -77,11 +78,12 @@ class Fields
 
     }
 
+
     function update_field($field_name, $var, $value)
     {
 
         if ($i = $this->get_field_index_by_name($field_name)) {
-            $this->fields[$i][$var] = $value;
+            $this->update_the_field($i, $var, $value);
             return true;
         }
 
@@ -92,11 +94,45 @@ class Fields
     {
 
         if (($i = $this->get_field_index_by_html_name($field_name)) !== false) {
-            $this->fields[$i][$var] = $value;
+            $this->update_the_field($i, $var, $value);
             return true;
         }
 
         return false;
+    }
+
+
+    /**
+     * @param $field_name
+     * @param $var
+     * @param $value
+     * @return bool
+     *
+     * If target of the save is an array, we must be storing options for
+     * radio buttons or checkboxes.
+     * If the option has a pipe in it, then the left of the pipe is the index
+     * the right is the value/text
+     *
+     *     10|Option 10
+     *
+     * If the target is not an array we have a normal text field.
+     *
+     */
+
+    function update_the_field($i, $var, $value)
+    {
+        if (is_array($this->fields[$i][$var])) {
+            if (strpos($value, '|') !== false) {
+                list ($index, $val) = explode('|', $value);
+                $this->fields[$i][$var][$index] = $val;
+            } else {
+                $this->fields[$i][$var][] = $value;
+            }
+        } else {
+            $this->fields[$i][$var] = $value;
+        }
+
+        return true;
     }
 
     function get_field_index_by_name($field_name)
@@ -165,26 +201,72 @@ class Fields
             $value = $v['value'];
             $label = $v['label'];
             $place_holder = $v['place_holder'];
+            $options = $v['options'];
             $type = $v['type'];
             $required = $v['required'];
             $description = $v['description'];
 
-            $html .= $this->paint_field($name, $html_name, $value, $label, $place_holder, $type, $required, $description);
+            $html .= $this->paint_field($name, $html_name, $value, $label, $place_holder, $options, $type, $required, $description);
 
         }
 
         return $html;
     }
 
-    function paint_field($name, $html_name = '', $value = '', $label = '', $place_holder = '', $type = '', $required = '', $description = '')
+    function paint_field($name, $html_name = '', $value = '', $label = '', $place_holder = '', $options = array(), $type = '', $required = '', $description = '')
     {
 
         if (empty($html_name)) $html_name = $name;
         if (empty($label)) $label = $name;
 
         switch ($type) {
-            case "textarea":
 
+            case "radio":
+
+
+                $option_html = '';
+                $i = 0;
+                foreach ( $options AS $k => $v ) {
+                    $i++;
+
+                    if ( $value == $k ) {
+                        $checked = ' checked="checked" ';
+                    } else {
+                        $checked = '';
+                    }
+                    $option_html .=<<<EOM
+                                     <div class="radio">
+                                        <label for="$html_name-$i">
+                                            <input name="$html_name" id="$html_name-$i" value="$k" type="radio" $checked>
+                                            $v
+                                        </label>
+                                    </div>
+EOM;
+                }
+
+
+                $f = <<<EOM
+                <row class="cmacc-field-input">
+                    <div class="col-lg-8">
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="$html_name">$label</label>
+                            <div class="col-md-9">
+                                $option_html
+                            </div>
+                        </div>
+
+                     </div>
+                     <div class="col-lg-4">
+                        $description
+                     </div>
+
+                </row>
+EOM;
+
+
+                break;
+
+            case "textarea":
 
                 $f = <<<EOM
                 <row class="cmacc-field-input">
@@ -208,6 +290,7 @@ class Fields
 EOM;
 
                 break;
+
 
             case "text":
             default:

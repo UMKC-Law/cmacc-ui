@@ -124,6 +124,10 @@ class QNA
                             $this->update_field($this->in_field, 'type', $field_value);
                             break;
 
+                        case 'field_option':
+                            $this->update_field($this->in_field, 'options', $field_value);
+                            break;
+
                         default:
                             print_r($field);
                             break;
@@ -324,11 +328,12 @@ class QNA
             $value = $v['value'];
             $label = $v['label'];
             $place_holder = $v['place_holder'];
+            $options = $v['options'];
             $type = $v['type'];
             $required = $v['required'];
             $description = $v['description'];
 
-            $html = $this->Fields->paint_field( $name, $html_name, $value, $label, $place_holder, $type, $required, $description);
+            $html = $this->Fields->paint_field( $name, $html_name, $value, $label, $place_holder, $options, $type, $required, $description);
 
             $this->stack[$this->stack_i][] = $html;
             $this->stack[$this->stack_i][] = "<row><div class=\"col-lg-12\"><br/>&nbsp;</div></row>\n";

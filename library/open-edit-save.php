@@ -66,7 +66,7 @@ class OpenEditSave
                                         }
                     */
                     $includes[] = '=[H4KC/Form/Master_DSA.md]';
-
+//die("<pre>".print_r($_POST,true)."</pre>");
                     /**
                      * Process post variables
                      */
@@ -75,13 +75,11 @@ class OpenEditSave
                         $fields->update_field_by_html_name($fld, 'value', $val);
                     }
 
-
                     $cmacc_document = $fields->format_fields_for_cmacc();
 
                     foreach ($includes AS $include) {
                         $cmacc_document .= "\n$include\n";
                     }
-
 
                     $fp = fopen($file_name, "w");
 
