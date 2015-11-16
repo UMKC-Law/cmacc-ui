@@ -68,6 +68,9 @@ class OpenEditSave
                      */
 
                     foreach ($_POST AS $fld => $val) {
+
+                        $val = preg_replace("/\r\n|\r|\n/","<BR class='replacecrlf'>",$val);
+
                         $fields->update_field_by_html_name($fld, 'value', $val);
                     }
 

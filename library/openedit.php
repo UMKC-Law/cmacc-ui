@@ -114,6 +114,7 @@ $QNA = new QNA("$path/$dir");
                     $fields = new Fields();
                     $lines = explode("\n", $document);
 
+
                     foreach ($lines AS $line) {
                         preg_match("/(.*)=(.*)/", $line, $field);
                         if (sizeof($field) == 0) continue;             // skip blank lines
@@ -125,8 +126,16 @@ $QNA = new QNA("$path/$dir");
                             }
                         } else {
 
-                            $field_name = $field[1];
-                            $field_value = $field[2];
+                            $field = explode("=",$line,2);          // We do this incase the data has an "=" in it
+
+                            $field_name = $field[0];
+                            $field_value = $field[1];
+
+                            if ( !empty($field_value)) {
+
+                                $field_value = str_replace("<BR class='replacecrlf'>", "\r\n", $field_value);
+
+                            }
 
                             $fields->add_cmacc_field($field_name, $field_value);
                         }
