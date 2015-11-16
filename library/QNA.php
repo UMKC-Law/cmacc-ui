@@ -28,6 +28,8 @@ class QNA
 
     var $in_field = false;
 
+    var $output_html = '';
+
     public function __construct($full_file_name)
     {
 
@@ -89,7 +91,7 @@ class QNA
 
                         case 'tab':
 
-                            if ( $this->in_field ) {
+                            if ($this->in_field) {
                                 $this->end_last_field();
                             }
 
@@ -129,7 +131,7 @@ class QNA
                             break;
 
                         default:
-                            print_r($field);
+                          //  print_r($field);
                             break;
 
                     }
@@ -147,10 +149,12 @@ class QNA
         if ($this->stack_i != -1) {                // Print the current page if there is one.
 
 
-
             $this->end_page(1);
 
         }
+
+        print $this->output_html;
+
         print "</div>";                             // This is a sign of a bug....
 
     }
@@ -179,7 +183,7 @@ class QNA
     function end_page($last_page = 0)
     {
 
-        if ( $this->in_field ) {
+        if ($this->in_field) {
             $this->end_last_field();
         }
 
@@ -188,27 +192,27 @@ class QNA
         }
 
         foreach ($this->stack[$this->stack_i] AS $i => $line) {
-            if ($i > 0) print "\t";
-            print $line . "\n";
+            if ($i > 0) $this->output_html .= "\t";
+            $this->output_html .= $line . "\n";
         }
 
-        print "<div class=\"page-bottom-nav\">";
+        $this->output_html .= "<div class=\"page-bottom-nav\">";
         if ($this->page_number != 1) {
             $prev_page = 'show_page="page_' . ($this->page_number - 1) . '"';
-            print '<a href="#" ' . $prev_page . ' class="btn btn-default page_button pull-left" role="button">Prev</a>';
+            $this->output_html .= '<a href="#" ' . $prev_page . ' class="btn btn-default page_button pull-left" role="button">Prev</a>';
         } else {
             $prev_page = 'show_page="page_1"';
         }
 
         $next_page = 'show_page="page_' . ($this->page_number + 1) . '"';
 
-        if ( $last_page == 0 ) {
-            print '<a href="#" ' . $next_page . ' class="btn btn-primary page_button pull-right" role="button">Next</a>';
+        if ($last_page == 0) {
+            $this->output_html .= '<a href="#" ' . $next_page . ' class="btn btn-primary page_button pull-right" role="button">Next</a>';
         }
 
-        print "</div>";
+        $this->output_html .= "</div>";
 
-        print '</div> <!-- end page div -->' . "\n";
+        $this->output_html .= '</div> <!-- end page div -->' . "\n";
 
 
         unset($this->stack[$this->stack_i]);
@@ -333,7 +337,7 @@ class QNA
             $required = $v['required'];
             $description = $v['description'];
 
-            $html = $this->Fields->paint_field( $name, $html_name, $value, $label, $place_holder, $options, $type, $required, $description);
+            $html = $this->Fields->paint_field($name, $html_name, $value, $label, $place_holder, $options, $type, $required, $description);
 
             $this->stack[$this->stack_i][] = $html;
             $this->stack[$this->stack_i][] = "<row><div class=\"col-lg-12\"><br/>&nbsp;</div></row>\n";
@@ -343,7 +347,8 @@ class QNA
         $this->in_field = false;
     }
 
-    function end_last_field() {
+    function end_last_field()
+    {
         $this->end_field();
         $this->stack[$this->stack_i][] = "</div>\n";
     }

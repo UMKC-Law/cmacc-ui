@@ -116,18 +116,21 @@ $QNA = new QNA("$path/$dir");
 
                     foreach ($lines AS $line) {
                         preg_match("/(.*)=(.*)/", $line, $field);
-
                         if (sizeof($field) == 0) continue;             // skip blank lines
 
-                        $field_name = $field[1];
-                        $field_value = $field[2];
+                        if (strlen($field[1]) == 0) {
+                            if (preg_match("/^=\[(.*)\]/", $line, $include_file_name)) {
+                                $include_line = $include_file_name[0];
+                                $fields->add_ca_include_file($include_file_name);
+                            }
+                        } else {
 
+                            $field_name = $field[1];
+                            $field_value = $field[2];
 
-                        $fields->add_cmacc_field($field_name, $field_value);
-
-
+                            $fields->add_cmacc_field($field_name, $field_value);
+                        }
                     }
-
 
                     $QNA->process_form_file($fields);
 

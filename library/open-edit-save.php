@@ -1,15 +1,15 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: paulb
  * Date: 11/13/15
  * Time: 8:30 PM
  */
-
 class OpenEditSave
 {
 
-    function __construct($path,$dir)
+    function __construct($path, $dir)
     {
 
         if (isset($_REQUEST['submit'])) {
@@ -40,33 +40,23 @@ class OpenEditSave
                     include("$lib_path/Fields.php");
                     $fields = new Fields();
 
+
+                    $lines = explode("\n", $document);
+
+                    foreach ($lines AS $line) {
+                        preg_match("/(.*)=(.*)/", $line, $field);
+                        if (sizeof($field) == 0) continue;             // skip blank lines
+
+                        if (strlen($field[1]) == 0) {
+                            if (preg_match("/^=\[(.*)\]/", $line, $include_file_name)) {
+                                $include_line = $include_file_name[0];
+                                $fields->add_ca_include_file($include_line);
+                            }
+                        }
+                    }
+
                     $QNA->process_form_file($fields);
 
-
-                    /**
-                     * Load fields from the input file
-                     */
-                    /*
-                                        $lines = explode("\n", $document);
-
-                                        foreach ($lines AS $line) {
-                                            preg_match("/(.*)=(.*)/", $line, $field);
-
-                                            if (sizeof($field) == 0) {
-                                                continue;                                   // skip blank lines
-                                            }  else {
-
-                                                $field_name = $field[1];
-                                                $field_value = $field[2];
-
-                                                $fields->add_cmacc_field($field_name, $field_value);
-                                            }
-
-
-                                        }
-                    */
-                    $includes[] = '=[H4KC/Form/Master_DSA.md]';
-//die("<pre>".print_r($_POST,true)."</pre>");
                     /**
                      * Process post variables
                      */
@@ -77,12 +67,10 @@ class OpenEditSave
 
                     $cmacc_document = $fields->format_fields_for_cmacc();
 
-                    foreach ($includes AS $include) {
-                        $cmacc_document .= "\n$include\n";
-                    }
+                    $cmacc_document .= $fields->format_include_files_for_cmacc();
+
 
                     $fp = fopen($file_name, "w");
-
 
                     fwrite($fp, $cmacc_document);
                     fclose($fp);

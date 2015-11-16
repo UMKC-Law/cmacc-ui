@@ -12,6 +12,9 @@ class Fields
     var $cmacc_id = 0;                                                  // Index or row number;
 
     var $fields = array();                                              // Fields defined by the user
+    var $include_ca_files = array();                                    // Files to be included, ie lines add
+
+    //   to the end of the file
 
     function __construct()
     {
@@ -53,6 +56,21 @@ class Fields
         }
 
         return false;
+    }
+
+    /**
+     * add_ca_include_file
+     * It is expected that the .md used for input is full of variables and then followed by a include that
+     * brings in the actual document.  We need to remember the include files so we can spit them out at the
+     * end.
+     *
+     * @param $include_file_name
+     */
+    function add_ca_include_file($include_file_name)
+    {
+
+
+        $this->include_ca_files[] = $include_file_name;
     }
 
     function add_field($name, $label = '', $value = '', $place_holder = '', $options = array(), $type = 'text', $required = '', $description = '', $cmacc_id = 0)
@@ -186,6 +204,21 @@ class Fields
         return $html;
     }
 
+    function format_include_files_for_cmacc()
+    {
+
+        $html = "\n";
+
+        foreach ($this->include_ca_files AS $include_line) {
+
+            $html .= "$include_line\n\n";
+
+        }
+
+        return $html;
+
+    }
+
     function paint_fields()
     {
 
@@ -226,15 +259,15 @@ class Fields
 
                 $option_html = '';
                 $i = 0;
-                foreach ( $options AS $k => $v ) {
+                foreach ($options AS $k => $v) {
                     $i++;
 
-                    if ( $value == $k ) {
+                    if ($value == $k) {
                         $checked = ' checked="checked" ';
                     } else {
                         $checked = '';
                     }
-                    $option_html .=<<<EOM
+                    $option_html .= <<<EOM
                                      <div class="radio">
                                         <label for="$html_name-$i">
                                             <input name="$html_name" id="$html_name-$i" value="$k" type="radio" $checked>

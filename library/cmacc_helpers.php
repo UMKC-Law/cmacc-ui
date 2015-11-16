@@ -8,7 +8,7 @@ $path = ROOT . '/Doc/';
 
 //$Completions_Message = "Open Completions - copy from here, paste into your document, and complete:";
 
-$Text_Edit_Window_Size = TEXTEDITWINDOWSIZE ;
+$Text_Edit_Window_Size = TEXTEDITWINDOWSIZE;
 
 if (!isset($_REQUEST['action'])) {
     $_REQUEST['action'] = "landing";
@@ -98,16 +98,16 @@ switch ($_REQUEST['action']) {
         if (file_exists($file_name_to_edit)) {
 
 
-                if (is_writeable($file_name_to_edit)) {
-                    $fp = fopen($file_name_to_edit, "w");
-                    $data = $_REQUEST['newcontent'];
-                    $data = preg_replace('/\r\n/', "\n", $data);
-                    $data = trim($data);
-                    fwrite($fp, $data);
-                    fclose($fp);
-                } else {
-                    print '<span style="color: red">ERROR: File ' . "$file_name_to_edit" . ' is not write able.</style>';
-                }
+            if (is_writeable($file_name_to_edit)) {
+                $fp = fopen($file_name_to_edit, "w");
+                $data = $_REQUEST['newcontent'];
+                $data = preg_replace('/\r\n/', "\n", $data);
+                $data = trim($data);
+                fwrite($fp, $data);
+                fclose($fp);
+            } else {
+                print '<span style="color: red">ERROR: File ' . "$file_name_to_edit" . ' is not write able.</style>';
+            }
 
         } else {
 
@@ -127,7 +127,7 @@ switch ($_REQUEST['action']) {
 
         include('open-edit-save.php');
 
-        $obj = new OpenEditSave($path,$dir);
+        $obj = new OpenEditSave($path, $dir);
 
         //source.php includes the formatting for the table that displays the components of a document
 
