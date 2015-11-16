@@ -211,9 +211,11 @@ class QNA
         $next_page = 'show_page="page_' . ($this->page_number + 1) . '"';
 
         if ($last_page == 0) {
-            $this->output_html .= '<a href="#" ' . $next_page . ' class="btn btn-primary page_button pull-right" role="button">Next</a>';
+            $this->output_html .= '<a href="#" ' . $next_page . ' class="btn btn-primary page_button pull-left" role="button">Next</a>';
         }
 
+
+        $this->output_html .= '<input class="btn btn-info pull-right" type="submit" name="submit" value="Save">';
         $this->output_html .= "</div>";
 
         $this->output_html .= '</div> <!-- end page div -->' . "\n";
