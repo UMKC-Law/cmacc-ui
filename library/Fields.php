@@ -254,6 +254,21 @@ class Fields
 
         switch ($type) {
 
+
+            /**
+             * 1.sec={1.Alt2.sec}         Will select Option Two from the following but shows in Edit & Complete as
+             *
+             *                                1.AltX.sec=
+             *
+             * 1.Alt1.sec=Option One
+             *
+             * 1.Alt2.sec=Option Two
+             *
+             * 1.Alt3.sec=Option Three
+             *
+             * 1.=[Z/Alt/3]
+             */
+
             case "radio":
 
 
