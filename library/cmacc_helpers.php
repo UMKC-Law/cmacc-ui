@@ -8,7 +8,7 @@ $path = ROOT . '/Doc/';
 
 //$Completions_Message = "Open Completions - copy from here, paste into your document, and complete:";
 
-$Text_Edit_Window_Size = TEXTEDITWINDOWSIZE;
+$Text_Edit_Window_Size = TEXT_EDIT_WINDOW_SIZE;
 
 if (!isset($_REQUEST['action'])) {
     $_REQUEST['action'] = "landing";
