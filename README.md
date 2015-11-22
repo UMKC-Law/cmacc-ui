@@ -71,6 +71,26 @@ To create a development site:
     git clone git@github.com:CommonAccord/Site-DataShare.git .
     ````
     
+5. Replace `.gitignore` with the following:
+
+````
+.idea
+.idea/
+newlogs
+/logs
+vendor
+vendor/
+/vendor/
+````
+ 
+5. Remove the current `vendor` folder
+6. Update git
+
+````
+git add .
+git commit -m 'Added vendor to .gitignore'
+````
+
 4. Configure composer to include this library instead of the standard library.  
     In `composer.json` change the `url` line in the `repositories` section and the
     `require` section.  The file should contain the following lines:
@@ -102,8 +122,7 @@ To create a development site:
     }
 ~       
     ````
-    
-5. Remove the current `vendor` folder
+   
 6. Remove the file `composer.lock`
 6. Regenerate the `vendor` folder by running Composer
     
