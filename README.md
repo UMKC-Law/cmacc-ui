@@ -166,6 +166,9 @@ Make sure the `LIB_PATH` line is:
 8. Make sure that the following lines are in `index.php`
 
     ````
+    DEFINE('EDIT_FORM_MESSAGE', 'Edit Form');   // Tab
+
+
     DEFINE('TEXT_EDIT_WINDOW_SIZE', 'cols=120 rows=30'); 
     DEFINE('TEXT_EDIT_AREA_STYLE', 'font-size: 16px; padding:10px;');  
     DEFINE('LANDING_MD', 'ZZZ/landing.md'); // The repo home
