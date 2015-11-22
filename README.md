@@ -71,7 +71,7 @@ To create a development site:
     git clone git@github.com:CommonAccord/Site-DataShare.git .
     ````
     
-5. Replace `.gitignore` with the following:
+4. Replace `.gitignore` with the following:
 
 ````
 .idea
@@ -91,7 +91,7 @@ git add .
 git commit -m 'Added vendor to .gitignore'
 ````
 
-4. Configure composer to include this library instead of the standard library.  
+7. Configure composer to include this library instead of the standard library.  
     In `composer.json` change the `url` line in the `repositories` section and the
     `require` section.  The file should contain the following lines:
 
@@ -123,8 +123,8 @@ git commit -m 'Added vendor to .gitignore'
 ~       
     ````
    
-6. Remove the file `composer.lock`
-6. Regenerate the `vendor` folder by running Composer
+8. Remove the file `composer.lock`
+9. Regenerate the `vendor` folder by running Composer
     
     ````
     composer update
@@ -157,13 +157,13 @@ git commit -m 'Added vendor to .gitignore'
     
     where xxxxxx is replaced by a random number.
     
-7. Verify that `index.php` points to the new `cmacc-ui` library.  
+10. Verify that `index.php` points to the new `cmacc-ui` library.  
 Make sure the `LIB_PATH` line is:
     
     ````
     DEFINE('LIB_PATH', ROOT . '/vendor/CommonAccord/cmacc-ui/library');
     ````
-8. Make sure that the following lines are in `index.php`
+11. Make sure that the following lines are in `index.php`
 
     ````
     DEFINE('EDIT_FORM_MESSAGE', 'Edit Form');   // Tab
