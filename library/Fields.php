@@ -35,7 +35,8 @@ class Fields
             'name' => $name,
             'html_name' => $html_name,
             'label' => $name,
-            'value' => $value
+            'value' => $value,
+            'source' => 'add_cmacc_field'
         );
 
         $field_offset = $this->get_field_offset($name);
@@ -79,18 +80,37 @@ class Fields
         $html_name = str_replace(' ', '_', $name);         // Remove white space
         $html_name = str_replace('.', '_', $html_name);         // Remove white space
 
-        $this->fields[] = array(
-            'name' => $name,
-            'html_name' => $html_name,
-            'label' => $label,
-            'value' => $value,
-            'place_holder' => $place_holder,
-            'options' => $options,
-            'type' => $type,
-            'required' => $required,
-            'description' => $description,
-            'cmacc_id' => $cmacc_id
-        );
+
+        if ($i = $this->get_field_index_by_name($name)) {
+            $this->fields[$i] = array(
+                'name' => $name,
+                'html_name' => $html_name,
+                'label' => $label,
+                'value' => $value,
+                'place_holder' => $place_holder,
+                'options' => $options,
+                'type' => $type,
+                'required' => $required,
+                'description' => $description,
+                'cmacc_id' => $cmacc_id,
+                'source' => 'add_field'
+            );
+        } else {
+            $this->fields[] = array(
+                'name' => $name,
+                'html_name' => $html_name,
+                'label' => $label,
+                'value' => $value,
+                'place_holder' => $place_holder,
+                'options' => $options,
+                'type' => $type,
+                'required' => $required,
+                'description' => $description,
+                'cmacc_id' => $cmacc_id,
+                'source' => 'add_field'
+            );
+
+        }
 
         return sizeof($this->fields) - 1;
 
@@ -183,19 +203,26 @@ class Fields
         var_dump($this->cmacc_fields);
     }
 
+    /**
+     * format_fields_for_cmacc - Write fields out that have a value and name in the cmacc format
+     *
+     *    value=name
+     *
+     * @return string
+     */
     function format_fields_for_cmacc()
     {
-
         $html = "\n";
 
         foreach ($this->fields AS $i => $v) {
-
 
             $name = $v['name'];
 
             if (empty($name)) continue;
 
             $value = $v['value'];
+
+            if (empty($value)) continue;
 
             $html .= "$name=$value\n\n";
 
